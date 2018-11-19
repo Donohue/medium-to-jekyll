@@ -81,7 +81,7 @@ def main():
     img_directory = os.path.join(jekyll_directory, 'img')
     if not os.path.isdir(img_directory):
         os.mkdir(img_directory)
-    elif os.path.exists(img_directory):
+    elif os.path.isfile(img_directory):
         print usage()
         print 'Jekyll directory contains `img` file instead of directory'
         sys.exit(-1)
