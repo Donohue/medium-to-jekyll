@@ -57,7 +57,7 @@ def format_frontmatter(markdown, title, date):
 
 def format_output_filename(filename):
     # Jekyll expects all seperators to be hyphens
-    filename = filename.replace('_', '-')
+    filename = filename.lower().replace('_', '-')
     # Strip the extra characters Medium has at the end of its URLs
     return '--'.join(filename.split('--')[:-1]) + '.markdown'
 
