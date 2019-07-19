@@ -7,6 +7,7 @@ import os
 import requests
 import shutil
 import sys
+import re
 
 def usage():
     print 'Usage: %s <path-to-medium-articles> <path-to-jekyll-root-directory>' % sys.argv[0]
@@ -59,7 +60,7 @@ def format_output_filename(filename):
     # Jekyll expects all seperators to be hyphens
     filename = filename.lower().replace('_', '-')
     # Strip the extra characters Medium has at the end of its URLs
-    return '--'.join(filename.split('--')[:-1]) + '.markdown'
+    return re.sub(r'-*?\w*?\.html$', '', filename) + '.markdown'
 
 def main():
     if len(sys.argv) != 3:
