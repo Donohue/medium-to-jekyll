@@ -1,4 +1,5 @@
 #!/usr/bin/env
+from __future__ import print_function
 
 from lxml import etree
 import lxml.html
@@ -10,7 +11,7 @@ import sys
 import re
 
 def usage():
-    print 'Usage: %s <path-to-medium-articles> <path-to-jekyll-root-directory>' % sys.argv[0]
+    print('Usage: %s <path-to-medium-articles> <path-to-jekyll-root-directory>' % sys.argv[0])
 
 def save_images(doc, image_directory):
     for img in doc.xpath('//img'):
@@ -26,7 +27,7 @@ def save_images(doc, image_directory):
                 shutil.copyfileobj(r.raw, w)
             img.attrib['src'] = '/%s/%s' % (image_directory.split('/')[-1], filename)
         else:
-            print 'Error processing image (%s): %d' % (url, r.status_code)
+            print('Error processing image (%s): %d' % (url, r.status_code))
 
 def extract_metadata(doc):
     title = etree.tostring(doc.xpath('//title')[0], method='text', encoding='unicode')
@@ -45,7 +46,7 @@ def convert_post(doc):
         elem = doc.xpath(xpath)
         if elem:
             elem[0].drop_tree()
-    html = etree.tostring(doc)
+    html = etree.tostring(doc, encoding='unicode')
     return markdownify(html)
 
 def format_frontmatter(markdown, title, date):
@@ -53,7 +54,7 @@ def format_frontmatter(markdown, title, date):
     post += 'layout:\tpost\n'
     post += 'title:\t"%s"\n' % title
     post += 'date:\t%s\n' % date
-    post += '---\n\n%s' % markdown
+    post += '---\n\n%s'% markdown
     return post
 
 def format_output_filename(filename):
@@ -69,22 +70,22 @@ def main():
 
     medium_directory = sys.argv[1]
     if not os.path.isdir(medium_directory):
-        print usage()
-        print 'Invalid Medium directory'
+        usage()
+        print('Invalid Medium directory')
         sys.exit(-1)
 
     jekyll_directory = sys.argv[2]
     if not os.path.isdir(jekyll_directory):
-        print usage()
-        print 'Invalid Jekyll directory'
+        usage()
+        print('Invalid Jekyll directory')
         sys.exit(-1)
 
     img_directory = os.path.join(jekyll_directory, 'img')
     if not os.path.isdir(img_directory):
         os.mkdir(img_directory)
     elif os.path.isfile(img_directory):
-        print usage()
-        print 'Jekyll directory contains `img` file instead of directory'
+        usage()
+        print('Jekyll directory contains `img` file instead of directory')
         sys.exit(-1)
 
     for filename in os.listdir(sys.argv[1]):
@@ -98,9 +99,9 @@ def main():
             markdown = convert_post(doc)
             post = format_frontmatter(markdown, title, date)
             output_filename = format_output_filename(filename)
-            with open(os.path.join(jekyll_directory, '_posts', output_filename), 'w') as out:
+            with open(os.path.join(jekyll_directory, '_posts', output_filename), 'wb') as out:
                 out.write(post.encode('utf-8'))
-                print 'Converted %s (Published %s)' % (title, date)
+                print('Converted %s (Published %s)' % (title, date))
 
 if __name__ == "__main__":
     main()
