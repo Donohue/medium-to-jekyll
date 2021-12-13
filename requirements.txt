@@ -2,7 +2,7 @@ beautifulsoup4==4.6.3
 certifi==2018.10.15
 chardet==3.0.4
 idna==2.7
-lxml==4.6.3
+lxml==4.6.5
 markdownify==0.4.1
 requests==2.20.1
 six==1.11.0
