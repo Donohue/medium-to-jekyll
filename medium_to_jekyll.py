@@ -3,6 +3,7 @@ from __future__ import print_function
 
 from lxml import etree
 import lxml.html
+import lxml.html.soupparser
 from markdownify import markdownify
 import os
 import requests
@@ -93,7 +94,7 @@ def main():
             continue
         with open(os.path.join(medium_directory, filename)) as f:
             html = f.read()
-            doc = lxml.html.document_fromstring(html)
+            doc= lxml.html.soupparser.fromstring(html)
             title, date = extract_metadata(doc)
             save_images(doc, img_directory)
             markdown = convert_post(doc)
