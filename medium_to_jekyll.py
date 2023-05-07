@@ -14,6 +14,17 @@ import re
 def usage():
     print('Usage: %s <path-to-medium-articles> <path-to-jekyll-root-directory>' % sys.argv[0])
 
+def get_unique_file_name(full_path_file_name):
+    increment_number = 0
+    file_name, file_extension = os.path.splitext(full_path_file_name)
+    while os.path.exists(full_path_file_name):
+        increment_number += 1
+        full_path_file_name = "%s_%d%s" % (file_name, increment_number, file_extension)
+    return full_path_file_name
+
+def sanatize_file_name(file_name):
+    return re.sub(r'[\\/*?:"<>|]', "", file_name)
+
 def save_images(doc, image_directory):
     for img in doc.xpath('//img'):
         if not 'src' in img.attrib:
@@ -22,11 +33,15 @@ def save_images(doc, image_directory):
         r = requests.get(url, stream=True)
         if r.status_code == 200:
             filename = url.split('/')[-1]
+            filename = sanatize_file_name(filename)            
             filepath = os.path.join(image_directory, filename)
+            filepath = get_unique_file_name(filepath)
+            filename = os.path.basename(filepath)
             with open(filepath, 'wb') as w:
                 r.raw.decode_content = True
                 shutil.copyfileobj(r.raw, w)
-            img.attrib['src'] = '/%s/%s' % (image_directory.split('/')[-1], filename)
+            path_slash = '\\' if os.name == 'nt' else '/'
+            img.attrib['src'] = '/%s/%s' % (image_directory.split(path_slash)[-1], filename)
         else:
             print('Error processing image (%s): %d' % (url, r.status_code))
 
@@ -92,7 +107,7 @@ def main():
     for filename in os.listdir(sys.argv[1]):
         if filename.startswith('draft') or not filename.endswith('.html'):
             continue
-        with open(os.path.join(medium_directory, filename)) as f:
+        with open(os.path.join(medium_directory, filename), encoding="utf8") as f:
             html = f.read()
             doc= lxml.html.soupparser.fromstring(html)
             title, date = extract_metadata(doc)
