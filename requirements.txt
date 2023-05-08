@@ -2,7 +2,7 @@ beautifulsoup4==4.11.1
 certifi==2022.12.7
 charset-normalizer==2.1.0
 idna==3.3
-lxml==4.9.1
+lxml==4.9.2
 markdownify==0.4.1
 requests==2.28.1
 six==1.16.0
