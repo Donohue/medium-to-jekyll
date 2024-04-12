@@ -1,7 +1,7 @@
 beautifulsoup4==4.11.1
 certifi==2023.7.22
 charset-normalizer==2.1.0
-idna==3.3
+idna==3.7
 lxml==4.9.2
 markdownify==0.4.1
 requests==2.31.0
