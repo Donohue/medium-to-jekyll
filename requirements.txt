@@ -3,7 +3,7 @@ certifi==2024.7.4
 charset-normalizer==2.1.0
 idna==3.7
 lxml==4.9.2
-markdownify==0.4.1
+markdownify==0.14.1
 requests==2.32.0
 six==1.16.0
 soupsieve==2.3.2.post1
